@@ -1,5 +1,6 @@
 package com.calbert.blackkitegauntlet.presentation.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,7 +18,7 @@ private fun getCurrentYearBounds(): Pair<Long, Long> {
     return Pair(start.toEpochDay(), end.toEpochDay())
 }
 
-class MainViewModel: ViewModel() {
+class MainViewModel(private val container: String): ViewModel() {
     private val _state = MutableStateFlow(MainUiState())
 
     val uiState: StateFlow<MainUiState> = _state.asStateFlow()
@@ -29,6 +30,7 @@ class MainViewModel: ViewModel() {
             val clampedValue = max(dateLimits.first, min(nextDate, dateLimits.second))
             s.copy(currentDate = clampedValue)
         }
+        Log.i("Date Change", this.container)
     }
 
     fun resetDate() {

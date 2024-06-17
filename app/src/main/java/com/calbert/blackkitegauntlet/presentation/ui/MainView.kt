@@ -26,7 +26,7 @@ import kotlin.math.abs
 
 @Composable
 fun MainView(
-    viewModel:  MainViewModel = viewModel(),
+    viewModel:  MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val scrollState = rememberScalingLazyListState(initialCenterItemScrollOffset = 40)
     val focusRequester = remember { FocusRequester() }
