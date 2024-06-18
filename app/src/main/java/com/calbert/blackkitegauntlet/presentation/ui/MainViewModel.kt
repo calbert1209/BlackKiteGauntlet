@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.calbert.blackkitegauntlet.presentation.data.AppContainer
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +28,7 @@ class MainViewModel(private val container: AppContainer): ViewModel() {
     private val _state = MutableStateFlow(MainUiState())
 
     val uiState: StateFlow<MainUiState> = _state.asStateFlow()
-    val dateLimits = getCurrentYearBounds()
+    private val dateLimits = getCurrentYearBounds()
 
     fun updateDate(change: Int) {
         _state.update { s ->
@@ -34,12 +36,21 @@ class MainViewModel(private val container: AppContainer): ViewModel() {
             val clampedValue = max(dateLimits.first, min(nextDate, dateLimits.second))
             s.copy(currentDate = clampedValue)
         }
+        getEvent("2024-12-09T05:00:00+0900")
     }
 
     fun resetDate() {
         _state.update { MainUiState() }
-        viewModelScope.launch {
-            val flow = container.eventRepository.getSampleEventStream()
+        getEvent("2024-08-03T05:00:00+0900")
+    }
+
+    private var getEventJob: Job? = null
+
+    private fun getEvent(timestamp: String) {
+        getEventJob?.cancel()
+        getEventJob = viewModelScope.launch {
+            delay(200)
+            val flow = container.eventRepository.getEventStream(timestamp)
             val first = flow.first()
             Log.i("db read", first.toString())
         }
