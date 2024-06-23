@@ -1,5 +1,6 @@
 package com.calbert.blackkitegauntlet.presentation.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -24,6 +25,9 @@ interface TidalEventDao {
 
     @Query("SELECT * from tidal_events WHERE timestamp = :timestamp")
     fun getEvent(timestamp: String): Flow<TidalEvent>
+
+    @Query("SELECT * from tidal_events WHERE timestamp like :date || '%' AND type <> 'hourly' ORDER BY timestamp")
+    fun getExtremes(date: String): Flow<List<TidalEvent>>
 
     @Query("SELECT * from tidal_events WHERE id = 1")
     fun getSampleEvent(): Flow<TidalEvent>

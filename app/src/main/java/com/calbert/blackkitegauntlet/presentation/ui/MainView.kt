@@ -19,7 +19,6 @@ import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
-import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import kotlin.math.abs
 
@@ -28,10 +27,10 @@ import kotlin.math.abs
 fun MainView(
     viewModel:  MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val scrollState = rememberScalingLazyListState(initialCenterItemScrollOffset = 40)
+    val scrollState = rememberScalingLazyListState()
     val focusRequester = remember { FocusRequester() }
     val haptic = LocalHapticFeedback.current
-    val state = viewModel.uiState.collectAsState()
+    val state = viewModel.state().collectAsState()
 
     Scaffold (
         modifier = Modifier
@@ -60,9 +59,9 @@ fun MainView(
                 )
             }
             item { DateText(state.value.currentDate) }
-            item { Text("foo") }
-            item { Text("bar") }
-            item { Text("baz") }
+            state.value.extremes?.forEach {
+                item { TidalExtreme(event = it) }
+            }
         }
 
         LaunchedEffect(Unit) {

@@ -16,6 +16,7 @@ import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.calbert.blackkitegauntlet.R
+import com.calbert.blackkitegauntlet.presentation.data.TidalEvent
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -85,4 +86,11 @@ fun DateText(epochDays: Long) {
     val formatter = DateTimeFormatter.ofPattern("MM / dd")
 
     Text(text = LocalDate.ofEpochDay(epochDays).format(formatter), fontSize = 18.sp, modifier = Modifier)
+}
+
+@Composable
+fun TidalExtreme(event: TidalEvent) {
+    val symbol = if (event.type == "high") {"▲"} else {"▼"}
+
+    Text(text = "${symbol}: ${event.level}")
 }

@@ -1,9 +1,10 @@
 package com.calbert.blackkitegauntlet.presentation.ui
 
-import android.util.Log
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.calbert.blackkitegauntlet.presentation.data.AppContainer
+import com.calbert.blackkitegauntlet.presentation.data.TidalEvent
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,37 +27,62 @@ private fun getCurrentYearBounds(): Pair<Long, Long> {
 
 class MainViewModel(private val container: AppContainer): ViewModel() {
     private val _state = MutableStateFlow(MainUiState())
-
-    val uiState: StateFlow<MainUiState> = _state.asStateFlow()
     private val dateLimits = getCurrentYearBounds()
 
     fun updateDate(change: Int) {
+        var dateString = ""
         _state.update { s ->
             val nextDate = s.currentDate + change.toLong()
+            dateString = LocalDate.ofEpochDay(nextDate).toString()
             val clampedValue = max(dateLimits.first, min(nextDate, dateLimits.second))
             s.copy(currentDate = clampedValue)
         }
-        getEvent("2024-12-09T05:00:00+0900")
+        getEvent(dateString)
     }
 
     fun resetDate() {
-        _state.update { MainUiState() }
-        getEvent("2024-08-03T05:00:00+0900")
+        val nextState = MainUiState()
+        val dateString = LocalDate.ofEpochDay(nextState.currentDate).toString()
+        _state.update { nextState }
+        getEvent(dateString)
+    }
+
+    fun state():StateFlow<MainUiState>  {
+        val uiState = _state.asStateFlow()
+        if (uiState.value.extremes != null) {
+            return uiState;
+        }
+
+        viewModelScope.launch {
+            val dateString = LocalDate.ofEpochDay(uiState.value.currentDate).toString()
+            val list = container.eventRepository.getExtremesStream(dateString).first()
+            _state.update { s ->
+                s.copy(extremes = list)
+            }
+        }
+
+        return uiState;
     }
 
     private var getEventJob: Job? = null
 
-    private fun getEvent(timestamp: String) {
+    private fun getEvent(date: String) {
+        if (_state.value.extremes != null) {
+            _state.update { s -> s.copy(extremes = null) }
+        }
+
         getEventJob?.cancel()
         getEventJob = viewModelScope.launch {
             delay(200)
-            val flow = container.eventRepository.getEventStream(timestamp)
-            val first = flow.first()
-            Log.i("db read", first.toString())
+            val list = container.eventRepository.getExtremesStream(date).first()
+            _state.update { s ->
+                s.copy(extremes = list)
+            }
         }
     }
 }
 
 data class MainUiState(
-    val currentDate: Long = LocalDate.now().toEpochDay()
+    val currentDate: Long = LocalDate.now().toEpochDay(),
+    val extremes: List<TidalEvent>? = null
 )
