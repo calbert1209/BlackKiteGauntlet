@@ -1,5 +1,6 @@
 package com.calbert.blackkitegauntlet.presentation.ui
 
+import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -48,6 +49,7 @@ class MainViewModel(private val container: AppContainer): ViewModel() {
     }
 
     fun state():StateFlow<MainUiState>  {
+        Log.i("UI State", "Loading entry for date")
         val uiState = _state.asStateFlow()
         if (uiState.value.extremes != null) {
             return uiState;
