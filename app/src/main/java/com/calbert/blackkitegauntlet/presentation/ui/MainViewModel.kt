@@ -1,7 +1,6 @@
 package com.calbert.blackkitegauntlet.presentation.ui
 
 import android.util.Log
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.calbert.blackkitegauntlet.presentation.data.AppContainer
@@ -26,7 +25,7 @@ private fun getCurrentYearBounds(): Pair<Long, Long> {
     return Pair(start.toEpochDay(), end.toEpochDay())
 }
 
-class MainViewModel(private val container: AppContainer): ViewModel() {
+class MainViewModel(private val container: AppContainer) : ViewModel() {
     private val _state = MutableStateFlow(MainUiState())
     private val dateLimits = getCurrentYearBounds()
 
@@ -48,11 +47,11 @@ class MainViewModel(private val container: AppContainer): ViewModel() {
         getEvent(dateString)
     }
 
-    fun state():StateFlow<MainUiState>  {
+    fun state(): StateFlow<MainUiState> {
         Log.i("UI State", "Loading entry for date")
         val uiState = _state.asStateFlow()
         if (uiState.value.extremes != null) {
-            return uiState;
+            return uiState
         }
 
         viewModelScope.launch {
@@ -63,7 +62,7 @@ class MainViewModel(private val container: AppContainer): ViewModel() {
             }
         }
 
-        return uiState;
+        return uiState
     }
 
     private var getEventJob: Job? = null
