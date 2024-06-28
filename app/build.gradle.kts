@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lifecycle.viewmodel.compose)
     implementation(libs.room.runtime)
+    implementation(libs.lifecycle.runtime.compose)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
     androidTestImplementation(platform(libs.compose.bom))
