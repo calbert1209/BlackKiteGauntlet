@@ -34,36 +34,22 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
     }
 
     fun updateDate(change: Int) {
-        var dateString = ""
-        _state.update { s ->
-            val nextDate = s.currentDate + change.toLong()
-            dateString = LocalDate.ofEpochDay(nextDate).toString()
-            val clampedValue = max(dateLimits.first, min(nextDate, dateLimits.second))
-            s.copy(currentDate = clampedValue)
-        }
-        getEvent(dateString)
+        val nextDate = _state.value.currentDate + change.toLong()
+        val clampedDate = max(dateLimits.first, min(nextDate, dateLimits.second))
+        getEvent(clampedDate)
     }
 
     fun resetDate() {
-        val nextState = MainUiState()
-        val dateString = LocalDate.ofEpochDay(nextState.currentDate).toString()
-        _state.update { nextState }
-        getEvent(dateString)
+        val nextDate = LocalDate.now().toEpochDay()
+        val clampedDate = max(dateLimits.first, min(nextDate, dateLimits.second))
+        getEvent(clampedDate)
     }
 
     fun state(): StateFlow<MainUiState> {
         Log.i("UI State", "Loading entry for date")
         val uiState = _state.asStateFlow()
-        if (uiState.value.extremes != null) {
-            return uiState
-        }
-
-        viewModelScope.launch {
-            val dateString = LocalDate.ofEpochDay(uiState.value.currentDate).toString()
-            val list = container.eventRepository.getExtremesStream(dateString).first()
-            _state.update { s ->
-                s.copy(extremes = list)
-            }
+        if (uiState.value.extremes == null) {
+            getEvent(uiState.value.currentDate)
         }
 
         return uiState
@@ -71,23 +57,24 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
 
     private var getEventJob: Job? = null
 
-    private fun getEvent(date: String) {
-        if (_state.value.extremes != null) {
-            _state.update { s -> s.copy(extremes = null) }
-        }
+    private fun getEvent(date: Long) {
+
+        _state.update { s -> s.copy(extremes = null, currentDate = date, loading = true) }
 
         getEventJob?.cancel()
         getEventJob = viewModelScope.launch {
             delay(200)
-            val list = container.eventRepository.getExtremesStream(date).first()
+            val dateString = LocalDate.ofEpochDay(date).toString()
+            val list = container.eventRepository.getExtremesStream(dateString).first()
             _state.update { s ->
-                s.copy(extremes = list)
+                s.copy(extremes = list, loading = false)
             }
         }
     }
 }
 
 data class MainUiState(
+    val loading: Boolean = true,
     val currentDate: Long = LocalDate.now().toEpochDay(),
     val extremes: List<TidalEvent>? = null
 )
