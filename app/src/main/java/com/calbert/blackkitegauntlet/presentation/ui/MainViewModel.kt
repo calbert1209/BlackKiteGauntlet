@@ -29,6 +29,10 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
     private val _state = MutableStateFlow(MainUiState())
     private val dateLimits = getCurrentYearBounds()
 
+    fun onResume() {
+        resetDate()
+    }
+
     fun updateDate(change: Int) {
         var dateString = ""
         _state.update { s ->

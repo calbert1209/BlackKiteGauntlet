@@ -16,7 +16,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
@@ -65,6 +65,12 @@ fun MainView(
 
         LaunchedEffect(Unit) {
             focusRequester.requestFocus()
+        }
+
+        LifecycleResumeEffect(true) {
+            viewModel.onResume()
+
+            onPauseOrDispose {}
         }
     }
 }
