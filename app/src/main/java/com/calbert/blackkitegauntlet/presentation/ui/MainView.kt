@@ -3,23 +3,28 @@ package com.calbert.blackkitegauntlet.presentation.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.foundation.lazy.ScalingLazyColumn
 import androidx.wear.compose.foundation.lazy.rememberScalingLazyListState
+import androidx.wear.compose.material.CircularProgressIndicator
+import androidx.wear.compose.material.ListHeader
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.TimeText
@@ -28,14 +33,14 @@ import kotlin.math.abs
 
 @Composable
 fun MainView(
-    viewModel:  MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    viewModel: MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val scrollState = rememberScalingLazyListState()
     val focusRequester = remember { FocusRequester() }
     val haptic = LocalHapticFeedback.current
     val state = viewModel.state().collectAsState()
 
-    Scaffold (
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .onRotaryScrollEvent {
@@ -53,11 +58,28 @@ fun MainView(
                 .fillMaxSize()
                 .background(MaterialTheme.colors.background),
             state = scrollState,
-            verticalArrangement = Arrangement.Top
+            verticalArrangement = Arrangement.Top,
+            autoCentering = null
         ) {
-            item { DateText(state.value.currentDate, onClick = {viewModel.resetDate()}) }
             item {
-                Column (horizontalAlignment = Alignment.CenterHorizontally) {
+                ListHeader {
+                    DateText(state.value.currentDate, onClick = { viewModel.resetDate() })
+                }
+            }
+            if (state.value.loading) {
+                item {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .height(100.dp)
+                            .width(100.dp)
+                            .padding(20.dp),
+                        indicatorColor = Color.White.copy(alpha = 0.8f),
+                        trackColor = MaterialTheme.colors.onBackground.copy(alpha = 0.1f),
+                        strokeWidth = 2.dp,
+                    )
+                }
+            } else {
+                item {
                     TidalExtremes(events = state.value.extremes)
                 }
             }
