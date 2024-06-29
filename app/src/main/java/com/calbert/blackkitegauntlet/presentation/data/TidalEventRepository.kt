@@ -9,5 +9,6 @@ interface TidalEventRepository {
     suspend fun deleteEvent(event: TidalEvent)
     fun getEventStream(timestamp: String): Flow<TidalEvent?>
     fun getExtremesStream(date: String): Flow<List<TidalEvent>>
+    fun getEventsStream(date: String): Flow<List<TidalEvent>>
     fun getSampleEventStream(): Flow<TidalEvent?>
 }

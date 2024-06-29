@@ -9,5 +9,6 @@ class OfflineTidalEventRepository(private val eventDao: TidalEventDao) : TidalEv
     override suspend fun deleteEvent(event: TidalEvent) = eventDao.delete(event)
     override fun getEventStream(timestamp: String): Flow<TidalEvent?> = eventDao.getEvent(timestamp)
     override fun getExtremesStream(date: String): Flow<List<TidalEvent>> = eventDao.getExtremes(date)
+    override fun getEventsStream(date: String): Flow<List<TidalEvent>> = eventDao.getEvents(date)
     override fun getSampleEventStream(): Flow<TidalEvent?> = eventDao.getSampleEvent()
 }

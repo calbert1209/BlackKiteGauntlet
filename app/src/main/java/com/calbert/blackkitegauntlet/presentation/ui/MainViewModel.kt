@@ -65,9 +65,11 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
         getEventJob = viewModelScope.launch {
             delay(200)
             val dateString = LocalDate.ofEpochDay(date).toString()
-            val list = container.eventRepository.getExtremesStream(dateString).first()
+            val events = container.eventRepository.getEventsStream(dateString).first()
+            val extremes = events.filter { e -> e.type != "hourly" }
+            val hourlyEvents = events.filter { e -> e.type == "hourly" }
             _state.update { s ->
-                s.copy(extremes = list, loading = false)
+                s.copy(extremes = extremes, loading = false, hourlyEvents = hourlyEvents)
             }
         }
     }
@@ -76,5 +78,6 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
 data class MainUiState(
     val loading: Boolean = true,
     val currentDate: Long = LocalDate.now().toEpochDay(),
-    val extremes: List<TidalEvent>? = null
+    val extremes: List<TidalEvent>? = null,
+    val hourlyEvents: List<TidalEvent>? = null
 )
