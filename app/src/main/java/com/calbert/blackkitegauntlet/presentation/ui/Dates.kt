@@ -50,15 +50,20 @@ fun TidalExtremes(events: List<TidalEvent>?) {
 
 @Composable
 fun TidalExtreme(event: TidalEvent) {
-    val symbol = if (event.type == "high") {"▲"} else {"▼"}
+    var symbol = "▲"
+    var color = blue
+    if (event.type == "low") {
+        symbol = "▼"
+        color = green
+    }
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Start,
 
     ) {
-        Text(modifier = Modifier.width(24.dp), text = symbol)
-        Text(modifier = Modifier.width(40.dp), text = "${event.level}")
+        Text(modifier = Modifier.width(24.dp), text = symbol, color = color)
+        Text(modifier = Modifier.width(40.dp), text = "${event.level}", color = color)
         Text(modifier = Modifier.width(54.dp), text = event.timestamp.substring(11, 16))
     }
 }

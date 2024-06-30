@@ -30,7 +30,6 @@ import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.TimeText
 import kotlin.math.abs
 
-
 @Composable
 fun MainView(
     viewModel: MainViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -81,6 +80,12 @@ fun MainView(
             } else {
                 item {
                     TidalExtremes(events = state.value.extremes)
+                }
+                if (state.value.hourlyEvents != null) {
+                    val events = state.value.hourlyEvents!!
+                    item {
+                        TideLevelChart(events = events, currentDate = state.value.currentDate)
+                    }
                 }
             }
         }
