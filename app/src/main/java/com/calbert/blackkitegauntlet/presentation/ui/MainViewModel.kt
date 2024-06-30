@@ -28,6 +28,7 @@ private fun getCurrentYearBounds(): Pair<Long, Long> {
 class MainViewModel(private val container: AppContainer) : ViewModel() {
     private val _state = MutableStateFlow(MainUiState())
     private val dateLimits = getCurrentYearBounds()
+    private val eventCache = mutableMapOf<Long, SortedTidalEvents>()
 
     fun onResume() {
         resetDate()
@@ -58,6 +59,11 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
     private var getEventJob: Job? = null
 
     private fun getEvent(date: Long) {
+        if (eventCache.containsKey(date)){
+            val event = eventCache[date]!!
+            _state.update { s -> s.copy(extremes = event.extremes, hourlyEvents = event.hourlyEvents, currentDate = date) }
+            return
+        }
 
         _state.update { s -> s.copy(extremes = null, currentDate = date, loading = true) }
 
@@ -68,6 +74,7 @@ class MainViewModel(private val container: AppContainer) : ViewModel() {
             val events = container.eventRepository.getEventsStream(dateString).first()
             val extremes = events.filter { e -> e.type != "hourly" }
             val hourlyEvents = events.filter { e -> e.type == "hourly" }
+            eventCache[date] = SortedTidalEvents(extremes = extremes, hourlyEvents = hourlyEvents)
             _state.update { s ->
                 s.copy(extremes = extremes, loading = false, hourlyEvents = hourlyEvents)
             }
@@ -80,4 +87,9 @@ data class MainUiState(
     val currentDate: Long = LocalDate.now().toEpochDay(),
     val extremes: List<TidalEvent>? = null,
     val hourlyEvents: List<TidalEvent>? = null
+)
+
+data class SortedTidalEvents (
+    val extremes: List<TidalEvent>,
+    val hourlyEvents: List<TidalEvent>
 )
