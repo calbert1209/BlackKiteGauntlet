@@ -78,14 +78,14 @@ fun MainView(
                     )
                 }
             } else {
-                item {
-                    TidalExtremes(events = state.value.extremes)
-                }
                 if (state.value.hourlyEvents != null) {
                     val events = state.value.hourlyEvents!!
                     item {
                         TideLevelChart(events = events, currentDate = state.value.currentDate)
                     }
+                }
+                item {
+                    TidalExtremes(events = state.value.extremes)
                 }
             }
         }
