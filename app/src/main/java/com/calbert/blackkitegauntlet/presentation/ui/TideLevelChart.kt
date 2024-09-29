@@ -22,7 +22,7 @@ fun TideLevelChart(events: List<TidalEvent>, currentDate: Long) {
             .height(120.dp)
     ) {
         val brush = Brush.verticalGradient(
-            colors = listOf(blue, green)
+            colors = listOf(strongBlue, strongGreen)
         )
         events.indices.forEach { i ->
             val event = events[i]
