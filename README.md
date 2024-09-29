@@ -2,7 +2,7 @@
 
 A Wear OS app to see local tide levels.
 
-This is a port of my [Black Kite](https://calbert1209.github.io/black-kite/) web app. (calbert1209/black-kite)
+This is a port of my [Black Kite](https://calbert1209.github.io/black-kite/) web app. ([calbert1209/black-kite](https://github.com/calbert1209/black-kite))
 
 ![knit screenshot](./black-kite-gauntlet-screenshot-knit.png)
 
