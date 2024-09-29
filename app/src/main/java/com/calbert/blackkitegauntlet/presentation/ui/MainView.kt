@@ -55,13 +55,13 @@ fun MainView(
         ScalingLazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colors.background),
+                .background(backgroundGrey),
             state = scrollState,
             verticalArrangement = Arrangement.Top,
             autoCentering = null
         ) {
             item {
-                ListHeader {
+                ListHeader(modifier = Modifier.padding(top = 10.dp, bottom = 5.dp)) {
                     DateText(state.value.currentDate, onClick = { viewModel.resetDate() })
                 }
             }

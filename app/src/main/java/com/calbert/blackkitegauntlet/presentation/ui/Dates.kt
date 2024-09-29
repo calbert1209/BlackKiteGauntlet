@@ -28,7 +28,7 @@ fun DateText(epochDays: Long, onClick: () -> Unit) {
         shape = RoundedCornerShape(percent = 50),
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = backgroundGrey,
             contentColor = Color.White
         )
     ) {
@@ -40,7 +40,7 @@ fun DateText(epochDays: Long, onClick: () -> Unit) {
 @Composable
 fun TidalExtremes(events: List<TidalEvent>?) {
     if (events != null) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 50.dp)) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(top= 10.dp, bottom = 50.dp)) {
             events.forEach {event ->
                 TidalExtreme(event = event)
             }
@@ -51,10 +51,10 @@ fun TidalExtremes(events: List<TidalEvent>?) {
 @Composable
 fun TidalExtreme(event: TidalEvent) {
     var symbol = "▲"
-    var color = blue
+    var color = textBlue
     if (event.type == "low") {
         symbol = "▼"
-        color = green
+        color = textGreen
     }
 
     Row(
