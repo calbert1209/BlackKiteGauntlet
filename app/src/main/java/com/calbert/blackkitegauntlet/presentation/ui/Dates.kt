@@ -40,7 +40,7 @@ fun DateText(epochDays: Long, onClick: () -> Unit) {
 @Composable
 fun TidalExtremes(events: List<TidalEvent>?) {
     if (events != null) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 50.dp)) {
             events.forEach {event ->
                 TidalExtreme(event = event)
             }
