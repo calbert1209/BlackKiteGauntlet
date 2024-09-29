@@ -1,6 +1,6 @@
 # Black Kite Gauntlet
 
-A Wear OS app to see my local tide levels.
+A Wear OS app to see local tide levels.
 
 This is a port of my [Black Kite](https://calbert1209.github.io/black-kite/) web app. (calbert1209/black-kite)
 
@@ -22,3 +22,9 @@ Tide data is currently hard-coded for my nearest measurement station, [Shonankoï
 - [ ] feature: ability to jump to "super events" such as days with extremely low tides
 - [ ] documentation: how to gather and normalize data
 - [ ] documentation: how to populate database
+
+## Naming
+
+The [black kite](https://en.wikipedia.org/wiki/Black_kite) _Milvus migrans_ is a species of predatory bird that sores above the shoreline near my home in Japan.
+
+A [gauntlet](https://en.wikipedia.org/wiki/Falconry_training_and_technique#Gauntlets) is a special glove worn by falconers to allow falcons to protect their hand from the bird's sharp talons.
