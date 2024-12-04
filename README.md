@@ -8,7 +8,7 @@ This is a port of my [Black Kite](https://calbert1209.github.io/black-kite/) web
 
 ## Why
 
-My family loves the ocean. When the tide is low, we explore the rocky shore near our home. My son and I connect by our curiosity about the creatures in tide pools. My daughter and I bound over the excitement of finding [cowrie](https://en.wikipedia.org/wiki/Cypraea) shells. And my wife loves the chance to have peace and quiet while we are out of the house. 😅
+My family loves the ocean. When the tide is low, we explore the rocky shore near our home. My son and I connect through our shared curiosity about the creatures in tide pools. My daughter and I bond by sharing our excitement of finding [cowrie](https://en.wikipedia.org/wiki/Cypraea) shells. And my wife loves the chance to have peace and quiet while we are out of the house. 😅
 
 Knowing when the tide will be low helps me plan free and wholesome entertainment.
 
